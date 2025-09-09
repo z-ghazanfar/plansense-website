@@ -19,6 +19,25 @@
             }
         }
     </script>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <!-- Firestore SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAu1zvTRtbAPfei3V9Ql5pUGL8BV396LGs",
+        authDomain: "plansense-website.firebaseapp.com",
+        projectId: "plansense-website",
+        storageBucket: "plansense-website.firebasestorage.app",
+        messagingSenderId: "468044318623",
+        appId: "1:468044318623:web:0319dbf5839b6fa95d5faa",
+        measurementId: "G-ZJWGFQ0E3T"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -200,28 +219,28 @@
     </section>
 
     <script>
-        // Waitlist data storage (in-memory for demo - you'll want a real database)
-        let waitlistData = JSON.parse(localStorage.getItem('plansenseWaitlist') || '[]');
-        
-        // Update counter on page load
+        // Update counter on page load (fetch count from Firestore)
+        async function updateWaitlistCounter() {
+            try {
+                const snapshot = await db.collection('waitlist').get();
+                document.getElementById('waitlistCount').textContent = snapshot.size;
+            } catch (err) {
+                document.getElementById('waitlistCount').textContent = '—';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             updateWaitlistCounter();
         });
 
-        function updateWaitlistCounter() {
-            const count = waitlistData.length;
-            document.getElementById('waitlistCount').textContent = count;
-        }
-
-        // Form submission
-        document.getElementById('waitlistForm').addEventListener('submit', function(e) {
+        // Form submission to Firestore
+        document.getElementById('waitlistForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const formData = new FormData(e.target);
             const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked')).map(cb => cb.value);
-            
+
             const waitlistEntry = {
-                id: Date.now(),
                 name: formData.get('name'),
                 email: formData.get('email'),
                 interests: interests,
@@ -230,59 +249,22 @@
                 referrer: document.referrer
             };
 
-            // Check if email already exists
-            const emailExists = waitlistData.some(entry => entry.email.toLowerCase() === waitlistEntry.email.toLowerCase());
-            
-            if (emailExists) {
-                alert('This email is already on our waitlist!');
-                return;
-            }
-
-            // Add to waitlist
-            waitlistData.push(waitlistEntry);
-            localStorage.setItem('plansenseWaitlist', JSON.stringify(waitlistData));
-            
-            // Show success message
-            document.getElementById('waitlistForm').classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
-            
-            // Update counter
-            updateWaitlistCounter();
-            
-            // Log for debugging (remove in production)
-            console.log('New waitlist entry:', waitlistEntry);
-            console.log('Total waitlist entries:', waitlistData.length);
-            
-            // Here you would typically send to your backend
-            // sendToBackend(waitlistEntry);
-        });
-
-        // Function to export waitlist data (for admin use)
-        function exportWaitlistData() {
-            const dataStr = JSON.stringify(waitlistData, null, 2);
-            const dataBlob = new Blob([dataStr], {type:'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'plansense-waitlist.json';
-            link.click();
-        }
-
-        // Admin function to view waitlist (call in console: viewWaitlist())
-        function viewWaitlist() {
-            console.table(waitlistData);
-            return waitlistData;
-        }
-
-        // Admin function to clear waitlist (call in console: clearWaitlist())
-        function clearWaitlist() {
-            if (confirm('Are you sure you want to clear the waitlist?')) {
-                localStorage.removeItem('plansenseWaitlist');
-                waitlistData = [];
+            try {
+                // Check if email already exists in Firestore
+                const query = await db.collection('waitlist').where('email', '==', waitlistEntry.email).get();
+                if (!query.empty) {
+                    alert('This email is already on our waitlist!');
+                    return;
+                }
+                await db.collection('waitlist').add(waitlistEntry);
+                document.getElementById('waitlistForm').classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
                 updateWaitlistCounter();
-                console.log('Waitlist cleared');
+            } catch (error) {
+                alert('Error joining waitlist. Please try again.');
+                console.error(error);
             }
-        }
+        });
     </script>
 </body>
 </html>
