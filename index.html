@@ -390,5 +390,111 @@
 
                 <div class="bg-gray-50 rounded-2xl p-8">
                     <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Contractor Dashboard</h3>
-                        <p class="text-gray-600 text-sm
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Contractor Dashboard Preview</h3>
+                        <p class="text-gray-600 text-sm">Manage leads, track projects, and get paid faster</p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium text-gray-900">Kitchen Renovation</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">New Lead</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3">2,500 sq ft • Budget: $35,000</p>
+                            <button onclick="openContractorModal()" class="w-full bg-purple-600 text-white py-2 rounded font-medium text-sm hover:bg-purple-700 transition-colors">
+                                Join Waitlist to Access
+                            </button>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg p-4 border border-gray-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium text-gray-900">Bathroom Remodel</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">In Progress</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3">850 sq ft • Budget: $18,000</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats/Social Proof Section -->
+    <section class="py-16 bg-blue-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">Join the Future of Construction</h2>
+                <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                    Be part of the platform that's revolutionizing how construction projects get done
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-white mb-2">$2M+</div>
+                        <div class="text-blue-100">In Projects Analyzed</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-white mb-2">500+</div>
+                        <div class="text-blue-100">Contractors Ready</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-white mb-2">95%</div>
+                        <div class="text-blue-100">Accuracy Rate</div>
+                    </div>
+                </div>
+                
+                <button onclick="openWaitlistModal()" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-50 transition-colors shadow-lg">
+                    Get Early Access - Join Waitlist
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="col-span-2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">P</span>
+                        </div>
+                        <span class="ml-3 text-xl font-bold">PlanSense</span>
+                    </div>
+                    <p class="text-gray-400 mb-4 max-w-md">
+                        Quote It. Build It. The all-in-one platform for construction projects, connecting homeowners with licensed contractors.
+                    </p>
+                    <div class="bg-gray-800 rounded-lg p-4">
+                        <p class="text-sm text-gray-300 mb-2">🚀 <strong>Coming Soon!</strong></p>
+                        <p class="text-xs text-gray-400">Join our waitlist to be the first to access PlanSense when we launch.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">For Homeowners</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Get Estimates</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Find Contractors</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Project Management</a></li>
+                        <li><a href="#" onclick="openWaitlistModal()" class="text-blue-400 hover:text-blue-300 transition-colors">Join Waitlist →</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">For Contractors</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Get Leads</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Project Tools</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Get Paid Faster</a></li>
+                        <li><a href="waitlist.html" class="text-purple-400 hover:text-purple-300 transition-colors">Join Network →</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 PlanSense LLC. All rights reserved. | Currently in Development</p>
+            </div>
+        </div>
