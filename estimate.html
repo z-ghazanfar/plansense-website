@@ -50,10 +50,79 @@
         .fade-in {
             animation: fadeIn 0.5s ease-out;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
-    <nav class="bg-white/90 backdrop-blur-md border-b border-gray-100">
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 fade-in">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Admin Access Required</h2>
+                <p class="text-gray-600">Enter the password to access the estimate tool</p>
+            </div>
+            
+            <form id="passwordForm" class="space-y-4">
+                <div>
+                    <input type="password" id="passwordInput" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
+                        placeholder="Enter password" required>
+                </div>
+                <div id="errorMessage" class="hidden text-red-600 text-sm text-center">
+                    Incorrect password. Please try again.
+                </div>
+                <div class="flex gap-3">
+                    <button type="button" onclick="closePasswordModal()" class="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Access Denied Screen -->
+    <div id="accessDenied" class="min-h-screen flex items-center justify-center px-4">
+        <div class="text-center max-w-md">
+            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Access Restricted</h1>
+            <p class="text-lg text-gray-600 mb-8">This tool is currently in development and requires admin authentication.</p>
+            <a href="index.html" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                Return to Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Navigation (Hidden by default) -->
+    <nav id="mainNav" class="hidden bg-white/90 backdrop-blur-md border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
@@ -62,17 +131,20 @@
                         <span class="ml-3 text-xl font-bold text-gray-900">PlanSense</span>
                     </a>
                 </div>
-                <div class="flex items-center">
-                    <a href="index.html" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
-                        ← Back to Home
-                    </a>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-600">Admin Mode</span>
+                    <button onclick="logout()" class="text-gray-600 hover:text-red-600 font-medium transition-colors">
+                        Logout
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <section class="py-20">
+    <!-- Main Content (Hidden by default) -->
+    <section id="mainContent" class="hidden py-20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Upload Section -->
             <div id="uploadSection" class="fade-in">
                 <div class="text-center mb-12">
                     <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
@@ -104,6 +176,7 @@
                 </div>
             </div>
 
+            <!-- Analyzing Section -->
             <div id="analyzingSection" class="hidden fade-in">
                 <div class="bg-white rounded-2xl shadow-2xl p-12 border border-gray-100 text-center">
                     <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
@@ -123,6 +196,7 @@
                 </div>
             </div>
 
+            <!-- Results Section -->
             <div id="resultsSection" class="hidden fade-in">
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -175,6 +249,7 @@
                 </div>
             </div>
 
+            <!-- Success Section -->
             <div id="successSection" class="hidden fade-in">
                 <div class="bg-white rounded-2xl shadow-2xl p-12 border border-gray-100 text-center">
                     <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -215,7 +290,7 @@
                         <a href="index.html" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                             Back to Home
                         </a>
-                        <button onclick="location.reload()" class="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:border-blue-600 hover:text-blue-600 transition-colors">
+                        <button onclick="resetEstimate()" class="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:border-blue-600 hover:text-blue-600 transition-colors">
                             Estimate Another Project
                         </button>
                     </div>
@@ -225,6 +300,84 @@
     </section>
 
     <script>
+        // Admin password - Change this to your desired password
+        const ADMIN_PASSWORD = 'plansense2025';
+        
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordForm = document.getElementById('passwordForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessage = document.getElementById('errorMessage');
+        const accessDenied = document.getElementById('accessDenied');
+        const mainNav = document.getElementById('mainNav');
+        const mainContent = document.getElementById('mainContent');
+
+        // Check if user is already authenticated
+        let isAuthenticated = false;
+
+        // Password form submission
+        passwordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const enteredPassword = passwordInput.value;
+            
+            if (enteredPassword === ADMIN_PASSWORD) {
+                isAuthenticated = true;
+                closePasswordModal();
+                showMainContent();
+                errorMessage.classList.add('hidden');
+                passwordInput.value = '';
+            } else {
+                errorMessage.classList.remove('hidden');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        });
+
+        function openPasswordModal() {
+            passwordModal.classList.add('active');
+            setTimeout(() => passwordInput.focus(), 100);
+        }
+
+        function closePasswordModal() {
+            passwordModal.classList.remove('active');
+            errorMessage.classList.add('hidden');
+            passwordInput.value = '';
+        }
+
+        function showMainContent() {
+            accessDenied.classList.add('hidden');
+            mainNav.classList.remove('hidden');
+            mainContent.classList.remove('hidden');
+        }
+
+        function logout() {
+            isAuthenticated = false;
+            mainNav.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessDenied.classList.remove('hidden');
+            
+            // Reset all sections
+            uploadSection.classList.remove('hidden');
+            analyzingSection.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            successSection.classList.add('hidden');
+            filePreview.classList.add('hidden');
+        }
+
+        function resetEstimate() {
+            successSection.classList.add('hidden');
+            uploadSection.classList.remove('hidden');
+            filePreview.classList.add('hidden');
+            selectedFiles = [];
+        }
+
+        // Close modal when clicking outside
+        passwordModal.addEventListener('click', (e) => {
+            if (e.target === passwordModal) {
+                closePasswordModal();
+            }
+        });
+
+        // File upload functionality
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const filePreview = document.getElementById('filePreview');
@@ -239,8 +392,10 @@
 
         let selectedFiles = [];
 
+        // Click to upload
         dropZone.addEventListener('click', () => fileInput.click());
 
+        // Drag and drop handlers
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.classList.add('drag-over');
@@ -354,6 +509,7 @@
         });
     </script>
 
+    <!-- Footer (Always visible) -->
     <footer class="bg-gray-900 text-white py-12 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center mb-4">
@@ -363,8 +519,16 @@
             <p class="text-gray-400 mb-4 max-w-md">
                 Quote It. Build It. The all-in-one platform for construction projects.
             </p>
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 PlanSense LLC. All rights reserved.</p>
+            <div class="border-t border-gray-800 mt-8 pt-8">
+                <div class="flex justify-between items-center">
+                    <p class="text-gray-400">&copy; 2025 PlanSense LLC. All rights reserved.</p>
+                    <button onclick="openPasswordModal()" class="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        Admin Access
+                    </button>
+                </div>
             </div>
         </div>
     </footer>
