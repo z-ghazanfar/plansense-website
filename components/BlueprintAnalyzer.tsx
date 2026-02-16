@@ -347,7 +347,7 @@ export const BlueprintAnalyzer: React.FC<BlueprintAnalyzerProps> = ({ onAnalysis
                </ResponsiveContainer>
             ) : (
                 <div className="flex-1 flex items-center justify-center text-slate-300">
-                    <PieChart size={24} className="opacity-20" />
+                    <AlertCircle size={24} className="opacity-20" />
                 </div>
             )}
         </Card>
